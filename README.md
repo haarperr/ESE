@@ -1,0 +1,2 @@
+# ESE
+Essential Mode Enhanced
