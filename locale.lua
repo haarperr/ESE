@@ -7,11 +7,11 @@ function _(str, ...)  -- Translate string
 		if Locales[Config.Locale][str] ~= nil then
 			return string.format(Locales[Config.Locale][str], ...)
 		else
-			return 'Translation [' .. Config.Locale .. '][' .. str .. '] does not exist'
+			return string.format('Translation [%s][%s] does not exist!', Config.Locale, str)
 		end
 
 	else
-		return 'Locale [' .. Config.Locale .. '] does not exist'
+		return string.format('Locale [%s] does not exist!', Config.Locale)
 	end
 
 end
