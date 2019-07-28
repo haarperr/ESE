@@ -128,7 +128,7 @@ TriggerEvent('es:addGroupCommand', 'giveaccountmoney', 'admin', function(source,
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(args[1])
 	local account = args[2]
-	local amount  = tonumber(args[3])
+	local amount = tonumber(args[3])
 
 	if amount ~= nil then
 		if xPlayer.getAccount(account) ~= nil then
@@ -146,8 +146,8 @@ end, {help = _U('giveaccountmoney'), params = {{name = "id", help = _U('id_param
 TriggerEvent('es:addGroupCommand', 'giveitem', 'admin', function(source, args, user)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(args[1])
-	local item    = args[2]
-	local count   = (args[3] == nil and 1 or tonumber(args[3]))
+	local item = args[2]
+	local count = (args[3] == nil and 1 or tonumber(args[3]))
 
 	if count ~= nil then
 		if xPlayer.getInventoryItem(item) ~= nil then
@@ -163,7 +163,7 @@ end, function(source, args, user)
 end, {help = _U('giveitem'), params = {{name = "id", help = _U('id_param')}, {name = "item", help = _U('item')}, {name = "amount", help = _U('amount')}}})
 
 TriggerEvent('es:addGroupCommand', 'giveweapon', 'admin', function(source, args, user)
-	local xPlayer    = ESX.GetPlayerFromId(args[1])
+	local xPlayer = ESX.GetPlayerFromId(args[1])
 	local weaponName = string.upper(args[2])
 
 	xPlayer.addWeapon(weaponName, tonumber(args[3]))

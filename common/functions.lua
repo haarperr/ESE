@@ -1,7 +1,7 @@
 local Charset = {}
 
-for i = 48,  57 do table.insert(Charset, string.char(i)) end
-for i = 65,  90 do table.insert(Charset, string.char(i)) end
+for i = 48, 57 do table.insert(Charset, string.char(i)) end
+for i = 65, 90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
 ESX.GetRandomString = function(length)
@@ -77,20 +77,20 @@ ESX.DumpTable = function(table, nb)
 	if type(table) == 'table' then
 		local s = ''
 		for i = 1, nb + 1, 1 do
-			s = s .. "    "
+			s = s .. " "
 		end
 
 		s = '{\n'
 		for k,v in pairs(table) do
 			if type(k) ~= 'number' then k = '"'..k..'"' end
 			for i = 1, nb, 1 do
-				s = s .. "    "
+				s = s .. " "
 			end
 			s = s .. '['..k..'] = ' .. ESX.DumpTable(v, nb + 1) .. ',\n'
 		end
 
 		for i = 1, nb, 1 do
-			s = s .. "    "
+			s = s .. " "
 		end
 
 		return s .. '}'

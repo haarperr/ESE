@@ -1,13 +1,13 @@
 AddEventHandler('es:playerLoaded', function(source, _player)
 	local _source = source
-	local tasks   = {}
+	local tasks = {}
 
 	local userData = {
-		accounts     = {},
-		inventory    = {},
-		job          = {},
-		loadout      = {},
-		playerName   = GetPlayerName(_source),
+		accounts = {},
+		inventory = {},
+		job = {},
+		loadout = {},
+		playerName = GetPlayerName(_source),
 		lastPosition = nil
 	}
 
@@ -31,7 +31,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					for j=1, #accounts, 1 do
 						if accounts[j].name == Config.Accounts[i] then
 							table.insert(userData.accounts, {
-								name  = accounts[j].name,
+								name = accounts[j].name,
 								money = accounts[j].money,
 								label = Config.AccountLabels[accounts[j].name]
 							})
@@ -137,17 +137,17 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 						userData.job = {}
 
-						userData.job.id    = jobObject.id
-						userData.job.name  = jobObject.name
+						userData.job.id = jobObject.id
+						userData.job.name = jobObject.name
 						userData.job.label = jobObject.label
 
-						userData.job.grade        = tonumber(grade)
-						userData.job.grade_name   = gradeObject.name
-						userData.job.grade_label  = gradeObject.label
+						userData.job.grade = tonumber(grade)
+						userData.job.grade_name = gradeObject.name
+						userData.job.grade_label = gradeObject.label
 						userData.job.grade_salary = gradeObject.salary
 
-						userData.job.skin_male    = {}
-						userData.job.skin_female  = {}
+						userData.job.skin_male = {}
+						userData.job.skin_female = {}
 
 						if gradeObject.skin_male ~= nil then
 							userData.job.skin_male = json.decode(gradeObject.skin_male)
@@ -164,17 +164,17 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 						userData.job = {}
 
-						userData.job.id    = jobObject.id
-						userData.job.name  = jobObject.name
+						userData.job.id = jobObject.id
+						userData.job.name = jobObject.name
 						userData.job.label = jobObject.label
 			
-						userData.job.grade        = tonumber(grade)
-						userData.job.grade_name   = gradeObject.name
-						userData.job.grade_label  = gradeObject.label
+						userData.job.grade = tonumber(grade)
+						userData.job.grade_name = gradeObject.name
+						userData.job.grade_label = gradeObject.label
 						userData.job.grade_salary = gradeObject.salary
 			
-						userData.job.skin_male    = {}
-						userData.job.skin_female  = {}
+						userData.job.skin_male = {}
+						userData.job.skin_female = {}
 					end
 
 					if result[1].loadout ~= nil then
@@ -210,7 +210,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 					for i=1, #missingAccounts, 1 do
 						table.insert(xPlayer.accounts, {
-							name  = missingAccounts[i],
+							name = missingAccounts[i],
 							money = 0,
 							label = Config.AccountLabels[missingAccounts[i]]
 						})
@@ -224,13 +224,13 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 				TriggerEvent('esx:playerLoaded', _source, xPlayer)
 
 				TriggerClientEvent('esx:playerLoaded', _source, {
-					identifier   = xPlayer.identifier,
-					accounts     = xPlayer.getAccounts(),
-					inventory    = xPlayer.getInventory(),
-					job          = xPlayer.getJob(),
-					loadout      = xPlayer.getLoadout(),
+					identifier = xPlayer.identifier,
+					accounts = xPlayer.getAccounts(),
+					inventory = xPlayer.getInventory(),
+					job = xPlayer.getJob(),
+					loadout = xPlayer.getLoadout(),
 					lastPosition = xPlayer.getLastPosition(),
-					money        = xPlayer.getMoney()
+					money = xPlayer.getMoney()
 				})
 
 				xPlayer.displayMoney(xPlayer.getMoney())
@@ -284,10 +284,10 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 				TriggerClientEvent('esx:showNotification', _source, _U('ex_inv_lim', targetXPlayer.name))
 			else
 				sourceXPlayer.removeInventoryItem(itemName, itemCount)
-				targetXPlayer.addInventoryItem   (itemName, itemCount)
+				targetXPlayer.addInventoryItem (itemName, itemCount)
 				
 				TriggerClientEvent('esx:showNotification', _source, _U('gave_item', itemCount, ESX.Items[itemName].label, targetXPlayer.name))
-				TriggerClientEvent('esx:showNotification', target,  _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target, _U('received_item', itemCount, ESX.Items[itemName].label, sourceXPlayer.name))
 			end
 
 		else
@@ -298,10 +298,10 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 		if itemCount > 0 and sourceXPlayer.getMoney() >= itemCount then
 			sourceXPlayer.removeMoney(itemCount)
-			targetXPlayer.addMoney   (itemCount)
+			targetXPlayer.addMoney (itemCount)
 
 			TriggerClientEvent('esx:showNotification', _source, _U('gave_money', ESX.Math.GroupDigits(itemCount), targetXPlayer.name))
-			TriggerClientEvent('esx:showNotification', target,  _U('received_money', ESX.Math.GroupDigits(itemCount), sourceXPlayer.name))
+			TriggerClientEvent('esx:showNotification', target, _U('received_money', ESX.Math.GroupDigits(itemCount), sourceXPlayer.name))
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_amount'))
 		end
@@ -310,10 +310,10 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 		if itemCount > 0 and sourceXPlayer.getAccount(itemName).money >= itemCount then
 			sourceXPlayer.removeAccountMoney(itemName, itemCount)
-			targetXPlayer.addAccountMoney   (itemName, itemCount)
+			targetXPlayer.addAccountMoney (itemName, itemCount)
 
 			TriggerClientEvent('esx:showNotification', _source, _U('gave_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], targetXPlayer.name))
-			TriggerClientEvent('esx:showNotification', target,  _U('received_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], sourceXPlayer.name))
+			TriggerClientEvent('esx:showNotification', target, _U('received_account_money', ESX.Math.GroupDigits(itemCount), Config.AccountLabels[itemName], sourceXPlayer.name))
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('imp_invalid_amount'))
 		end
@@ -328,10 +328,10 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 
 			if itemCount > 0 then
 				TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_ammo', weaponLabel, itemCount, targetXPlayer.name))
-				TriggerClientEvent('esx:showNotification', target,  _U('received_weapon_ammo', weaponLabel, itemCount, sourceXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target, _U('received_weapon_ammo', weaponLabel, itemCount, sourceXPlayer.name))
 			else
 				TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon', weaponLabel, targetXPlayer.name))
-				TriggerClientEvent('esx:showNotification', target,  _U('received_weapon', weaponLabel, sourceXPlayer.name))
+				TriggerClientEvent('esx:showNotification', target, _U('received_weapon', weaponLabel, sourceXPlayer.name))
 			end
 		else
 			TriggerClientEvent('esx:showNotification', _source, _U('gave_weapon_hasalready', targetXPlayer.name, weaponLabel))
@@ -435,7 +435,7 @@ end)
 RegisterServerEvent('esx:useItem')
 AddEventHandler('esx:useItem', function(itemName)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	local count   = xPlayer.getInventoryItem(itemName).count
+	local count = xPlayer.getInventoryItem(itemName).count
 
 	if count > 0 then
 		ESX.UseItem(source, itemName)
@@ -447,14 +447,14 @@ end)
 RegisterServerEvent('esx:onPickup')
 AddEventHandler('esx:onPickup', function(id)
 	local _source = source
-	local pickup  = ESX.Pickups[id]
+	local pickup = ESX.Pickups[id]
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
 	if pickup.type == 'item_standard' then
 
-		local item      = xPlayer.getInventoryItem(pickup.name)
-		local canTake   = ((item.limit == -1) and (pickup.count)) or ((item.limit - item.count > 0) and (item.limit - item.count)) or 0
-		local total     = pickup.count < canTake and pickup.count or canTake
+		local item = xPlayer.getInventoryItem(pickup.name)
+		local canTake = ((item.limit == -1) and (pickup.count)) or ((item.limit - item.count > 0) and (item.limit - item.count)) or 0
+		local total = pickup.count < canTake and pickup.count or canTake
 		local remaining = pickup.count - total
 
 		TriggerClientEvent('esx:removePickup', -1, id)
@@ -483,13 +483,13 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	cb({
-		identifier   = xPlayer.identifier,
-		accounts     = xPlayer.getAccounts(),
-		inventory    = xPlayer.getInventory(),
-		job          = xPlayer.getJob(),
-		loadout      = xPlayer.getLoadout(),
+		identifier = xPlayer.identifier,
+		accounts = xPlayer.getAccounts(),
+		inventory = xPlayer.getInventory(),
+		job = xPlayer.getJob(),
+		loadout = xPlayer.getLoadout(),
 		lastPosition = xPlayer.getLastPosition(),
-		money        = xPlayer.getMoney()
+		money = xPlayer.getMoney()
 	})
 end)
 
@@ -497,13 +497,13 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
 	local xPlayer = ESX.GetPlayerFromId(target)
 
 	cb({
-		identifier   = xPlayer.identifier,
-		accounts     = xPlayer.getAccounts(),
-		inventory    = xPlayer.getInventory(),
-		job          = xPlayer.getJob(),
-		loadout      = xPlayer.getLoadout(),
+		identifier = xPlayer.identifier,
+		accounts = xPlayer.getAccounts(),
+		inventory = xPlayer.getInventory(),
+		job = xPlayer.getJob(),
+		loadout = xPlayer.getLoadout(),
 		lastPosition = xPlayer.getLastPosition(),
-		money        = xPlayer.getMoney()
+		money = xPlayer.getMoney()
 	})
 end)
 

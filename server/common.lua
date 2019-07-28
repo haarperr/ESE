@@ -1,14 +1,14 @@
-ESX                      = {}
-ESX.Players              = {}
+ESX = {}
+ESX.Players = {}
 ESX.UsableItemsCallbacks = {}
-ESX.Items                = {}
-ESX.ServerCallbacks      = {}
-ESX.TimeoutCount         = -1
-ESX.CancelledTimeouts    = {}
-ESX.LastPlayerData       = {}
-ESX.Pickups              = {}
-ESX.PickupId             = 0
-ESX.Jobs                 = {}
+ESX.Items = {}
+ESX.ServerCallbacks = {}
+ESX.TimeoutCount = -1
+ESX.CancelledTimeouts = {}
+ESX.LastPlayerData = {}
+ESX.Pickups = {}
+ESX.PickupId = 0
+ESX.Jobs = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
@@ -22,9 +22,9 @@ MySQL.ready(function()
 	MySQL.Async.fetchAll('SELECT * FROM items', {}, function(result)
 		for i=1, #result, 1 do
 			ESX.Items[result[i].name] = {
-				label     = result[i].label,
-				limit     = result[i].limit,
-				rare      = (result[i].rare       == 1 and true or false),
+				label = result[i].label,
+				limit = result[i].limit,
+				rare = (result[i].rare == 1 and true or false),
 				canRemove = (result[i].can_remove == 1 and true or false),
 			}
 		end
@@ -56,11 +56,11 @@ MySQL.ready(function()
 end)
 
 AddEventHandler('esx:playerLoaded', function(source)
-	local xPlayer         = ESX.GetPlayerFromId(source)
-	local accounts        = {}
-	local items           = {}
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local accounts = {}
+	local items = {}
 	local xPlayerAccounts = xPlayer.getAccounts()
-	local xPlayerItems    = xPlayer.getInventory()
+	local xPlayerItems = xPlayer.getInventory()
 
 	for i=1, #xPlayerAccounts, 1 do
 		accounts[xPlayerAccounts[i].name] = xPlayerAccounts[i].money
@@ -72,7 +72,7 @@ AddEventHandler('esx:playerLoaded', function(source)
 
 	ESX.LastPlayerData[source] = {
 		accounts = accounts,
-		items    = items
+		items = items
 	}
 end)
 

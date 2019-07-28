@@ -31,15 +31,15 @@ end)
 function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
 	local victimCoords = GetEntityCoords(PlayerPedId())
 	local killerCoords = GetEntityCoords(GetPlayerPed(killerClientId))
-	local distance     = #(victimCoords - killerCoords)
+	local distance = #(victimCoords - killerCoords)
 
 	local data = {
 		victimCoords = { x = ESX.Math.Round(victimCoords.x, 1), y = ESX.Math.Round(victimCoords.y, 1), z = ESX.Math.Round(victimCoords.z, 1) },
 		killerCoords = { x = ESX.Math.Round(killerCoords.x, 1), y = ESX.Math.Round(killerCoords.y, 1), z = ESX.Math.Round(killerCoords.z, 1) },
 
 		killedByPlayer = true,
-		deathCause     = killerWeapon,
-		distance       = ESX.Math.Round(distance, 1),
+		deathCause = killerWeapon,
+		distance = ESX.Math.Round(distance, 1),
 
 		killerServerId = killerServerId,
 		killerClientId = killerClientId
@@ -57,7 +57,7 @@ function PlayerKilled()
 		victimCoords = { x = ESX.Math.Round(victimCoords.x, 1), y = ESX.Math.Round(victimCoords.y, 1), z = ESX.Math.Round(victimCoords.z, 1) },
 
 		killedByPlayer = false,
-		deathCause     = GetPedCauseOfDeath(playerPed)
+		deathCause = GetPedCauseOfDeath(playerPed)
 	}
 
 	TriggerEvent('esx:onPlayerDeath', data)

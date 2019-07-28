@@ -27,12 +27,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 		end
 
 		ESX.UI.HUD.RegisterElement('job', #xPlayer.accounts, 0, jobTpl, {
-			job_label   = '',
+			job_label = '',
 			grade_label = ''
 		})
 
 		ESX.UI.HUD.UpdateElement('job', {
-			job_label   = xPlayer.job.label,
+			job_label = xPlayer.job.label,
 			grade_label = xPlayer.job.grade_label
 		})
 	else
@@ -164,7 +164,7 @@ end)
 
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weaponName, ammo)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 
 	GiveWeaponToPed(playerPed, weaponHash, ammo, false, false)
@@ -173,7 +173,7 @@ end)
 
 RegisterNetEvent('esx:addWeaponComponent')
 AddEventHandler('esx:addWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
@@ -182,7 +182,7 @@ end)
 
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 
 	RemoveWeaponFromPed(playerPed, weaponHash)
@@ -199,7 +199,7 @@ end)
 
 RegisterNetEvent('esx:removeWeaponComponent')
 AddEventHandler('esx:removeWeaponComponent', function(weaponName, weaponComponent)
-	local playerPed  = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local weaponHash = GetHashKey(weaponName)
 	local componentHash = ESX.GetWeaponComponent(weaponName, weaponComponent).hash
 
@@ -227,7 +227,7 @@ RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	if Config.EnableHud then
 		ESX.UI.HUD.UpdateElement('job', {
-			job_label   = job.label,
+			job_label = job.label,
 			grade_label = job.grade_label
 		})
 	end
@@ -278,19 +278,19 @@ end)
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(model)
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
+	local coords = GetEntityCoords(playerPed)
 
 	ESX.Game.SpawnVehicle(model, coords, 90.0, function(vehicle)
-		TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
+		TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 	end)
 end)
 
 RegisterNetEvent('esx:spawnObject')
 AddEventHandler('esx:spawnObject', function(model)
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
+	local coords = GetEntityCoords(playerPed)
+	local forward = GetEntityForwardVector(playerPed)
+	local x, y, z = table.unpack(coords + forward * 1.0)
 
 	ESX.Game.SpawnObject(model, {
 		x = x,
@@ -304,8 +304,8 @@ end)
 
 RegisterNetEvent('esx:pickup')
 AddEventHandler('esx:pickup', function(id, label, player)
-	local ped     = GetPlayerPed(GetPlayerFromServerId(player))
-	local coords  = GetEntityCoords(ped)
+	local ped = GetPlayerPed(GetPlayerFromServerId(player))
+	local coords = GetEntityCoords(ped)
 	local forward = GetEntityForwardVector(ped)
 	local x, y, z = table.unpack(coords + forward * -2.0)
 
@@ -348,11 +348,11 @@ end)
 
 RegisterNetEvent('esx:spawnPed')
 AddEventHandler('esx:spawnPed', function(model)
-	model           = (tonumber(model) ~= nil and tonumber(model) or GetHashKey(model))
+	model = (tonumber(model) ~= nil and tonumber(model) or GetHashKey(model))
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
+	local coords = GetEntityCoords(playerPed)
+	local forward = GetEntityForwardVector(playerPed)
+	local x, y, z = table.unpack(coords + forward * 1.0)
 
 	Citizen.CreateThread(function()
 		RequestModel(model)
@@ -368,7 +368,7 @@ end)
 RegisterNetEvent('esx:deleteVehicle')
 AddEventHandler('esx:deleteVehicle', function()
 	local playerPed = PlayerPedId()
-	local vehicle   = ESX.Game.GetVehicleInDirection()
+	local vehicle = ESX.Game.GetVehicleInDirection()
 
 	if IsPedInAnyVehicle(playerPed, true) then
 		vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -403,8 +403,8 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(5000)
 
-		local playerPed      = PlayerPedId()
-		local loadout        = {}
+		local playerPed = PlayerPedId()
+		local loadout = {}
 		local loadoutChanged = false
 
 		if IsPedDeadOrDying(playerPed) then
@@ -521,7 +521,7 @@ Citizen.CreateThread(function()
 
 		if ESX.PlayerLoaded and isPlayerSpawned then
 			local playerPed = PlayerPedId()
-			local coords    = GetEntityCoords(playerPed)
+			local coords = GetEntityCoords(playerPed)
 
 			if not IsEntityDead(playerPed) then
 				ESX.PlayerData.lastPosition = {x = coords.x, y = coords.y, z = coords.z}

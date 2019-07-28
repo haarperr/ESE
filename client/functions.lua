@@ -1,29 +1,29 @@
-ESX                           = {}
-ESX.PlayerData                = {}
-ESX.PlayerLoaded              = false
-ESX.CurrentRequestId          = 0
-ESX.ServerCallbacks           = {}
-ESX.TimeoutCallbacks          = {}
+ESX = {}
+ESX.PlayerData = {}
+ESX.PlayerLoaded = false
+ESX.CurrentRequestId = 0
+ESX.ServerCallbacks = {}
+ESX.TimeoutCallbacks = {}
 
-ESX.UI                        = {}
-ESX.UI.HUD                    = {}
+ESX.UI = {}
+ESX.UI.HUD = {}
 ESX.UI.HUD.RegisteredElements = {}
-ESX.UI.Menu                   = {}
-ESX.UI.Menu.RegisteredTypes   = {}
-ESX.UI.Menu.Opened            = {}
+ESX.UI.Menu = {}
+ESX.UI.Menu.RegisteredTypes = {}
+ESX.UI.Menu.Opened = {}
 
-ESX.Game                      = {}
-ESX.Game.Utils                = {}
+ESX.Game = {}
+ESX.Game.Utils = {}
 
-ESX.Scaleform                 = {}
-ESX.Scaleform.Utils           = {}
+ESX.Scaleform = {}
+ESX.Scaleform.Utils = {}
 
-ESX.Streaming                 = {}
+ESX.Streaming = {}
 
 ESX.SetTimeout = function(msec, cb)
 	table.insert(ESX.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
-		cb   = cb
+		cb = cb
 	})
 	return #ESX.TimeoutCallbacks
 end
@@ -79,7 +79,7 @@ end
 
 ESX.UI.HUD.SetDisplay = function(opacity)
 	SendNUIMessage({
-		action  = 'setHUDDisplay',
+		action = 'setHUDDisplay',
 		opacity = opacity
 	})
 end
@@ -101,12 +101,12 @@ ESX.UI.HUD.RegisterElement = function(name, index, priority, html, data)
 	table.insert(ESX.UI.HUD.RegisteredElements, name)
 
 	SendNUIMessage({
-		action    = 'insertHUDElement',
-		name      = name,
-		index     = index,
-		priority  = priority,
-		html      = html,
-		data      = data
+		action = 'insertHUDElement',
+		name = name,
+		index = index,
+		priority = priority,
+		html = html,
+		data = data
 	})
 
 	ESX.UI.HUD.UpdateElement(name, data)
@@ -121,36 +121,36 @@ ESX.UI.HUD.RemoveElement = function(name)
 	end
 
 	SendNUIMessage({
-		action    = 'deleteHUDElement',
-		name      = name
+		action = 'deleteHUDElement',
+		name = name
 	})
 end
 
 ESX.UI.HUD.UpdateElement = function(name, data)
 	SendNUIMessage({
 		action = 'updateHUDElement',
-		name   = name,
-		data   = data
+		name = name,
+		data = data
 	})
 end
 
 ESX.UI.Menu.RegisterType = function(type, open, close)
 	ESX.UI.Menu.RegisteredTypes[type] = {
-		open   = open,
-		close  = close
+		open = open,
+		close = close
 	}
 end
 
 ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change, close)
 	local menu = {}
 
-	menu.type      = type
+	menu.type = type
 	menu.namespace = namespace
-	menu.name      = name
-	menu.data      = data
-	menu.submit    = submit
-	menu.cancel    = cancel
-	menu.change    = change
+	menu.name = name
+	menu.data = data
+	menu.submit = submit
+	menu.cancel = cancel
+	menu.change = change
 
 	menu.close = function()
 
@@ -263,9 +263,9 @@ end
 ESX.UI.ShowInventoryItemNotification = function(add, item, count)
 	SendNUIMessage({
 		action = 'inventoryNotification',
-		add    = add,
-		item   = item,
-		count  = count
+		add = add,
+		item = item,
+		count = count
 	})
 end
 
@@ -339,7 +339,7 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 		ESX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
-		local id      = NetworkGetNetworkIdFromEntity(vehicle)
+		local id = NetworkGetNetworkIdFromEntity(vehicle)
 
 		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
@@ -407,11 +407,11 @@ ESX.Game.GetObjects = function()
 end
 
 ESX.Game.GetClosestObject = function(filter, coords)
-	local objects         = ESX.Game.GetObjects()
+	local objects = ESX.Game.GetObjects()
 	local closestDistance = -1
-	local closestObject   = -1
-	local filter          = filter
-	local coords          = coords
+	local closestObject = -1
+	local filter = filter
+	local coords = coords
 
 	if type(filter) == 'string' then
 		if filter ~= '' then
@@ -421,7 +421,7 @@ ESX.Game.GetClosestObject = function(filter, coords)
 
 	if coords == nil then
 		local playerPed = PlayerPedId()
-		coords          = GetEntityCoords(playerPed)
+		coords = GetEntityCoords(playerPed)
 	end
 
 	for i=1, #objects, 1 do
@@ -441,10 +441,10 @@ ESX.Game.GetClosestObject = function(filter, coords)
 
 		if foundObject then
 			local objectCoords = GetEntityCoords(objects[i])
-			local distance     = #(objectCoords - coords)
+			local distance = #(objectCoords - coords)
 
 			if closestDistance == -1 or closestDistance > distance then
-				closestObject   = objects[i]
+				closestObject = objects[i]
 				closestDistance = distance
 			end
 		end
@@ -468,17 +468,17 @@ ESX.Game.GetPlayers = function()
 end
 
 ESX.Game.GetClosestPlayer = function(coords)
-	local players         = ESX.Game.GetPlayers()
+	local players = ESX.Game.GetPlayers()
 	local closestDistance = -1
-	local closestPlayer   = -1
-	local coords          = coords
-	local usePlayerPed    = false
-	local playerPed       = PlayerPedId()
-	local playerId        = PlayerId()
+	local closestPlayer = -1
+	local coords = coords
+	local usePlayerPed = false
+	local playerPed = PlayerPedId()
+	local playerId = PlayerId()
 
 	if coords == nil then
 		usePlayerPed = true
-		coords       = GetEntityCoords(playerPed)
+		coords = GetEntityCoords(playerPed)
 	end
 
 	for i=1, #players, 1 do
@@ -486,10 +486,10 @@ ESX.Game.GetClosestPlayer = function(coords)
 
 		if not usePlayerPed or (usePlayerPed and players[i] ~= playerId) then
 			local targetCoords = GetEntityCoords(target)
-			local distance     = #(targetCoords - coords)
+			local distance = #(targetCoords - coords)
 
 			if closestDistance == -1 or closestDistance > distance then
-				closestPlayer   = players[i]
+				closestPlayer = players[i]
 				closestDistance = distance
 			end
 		end
@@ -499,13 +499,13 @@ ESX.Game.GetClosestPlayer = function(coords)
 end
 
 ESX.Game.GetPlayersInArea = function(coords, area)
-	local players       = ESX.Game.GetPlayers()
+	local players = ESX.Game.GetPlayers()
 	local playersInArea = {}
 
 	for i=1, #players, 1 do
-		local target       = GetPlayerPed(players[i])
+		local target = GetPlayerPed(players[i])
 		local targetCoords = GetEntityCoords(target)
-		local distance     = #(targetCoords - coords)
+		local distance = #(targetCoords - coords)
 
 		if distance <= area then
 			table.insert(playersInArea, players[i])
@@ -526,22 +526,22 @@ ESX.Game.GetVehicles = function()
 end
 
 ESX.Game.GetClosestVehicle = function(coords)
-	local vehicles        = ESX.Game.GetVehicles()
+	local vehicles = ESX.Game.GetVehicles()
 	local closestDistance = -1
-	local closestVehicle  = -1
-	local coords          = coords
+	local closestVehicle = -1
+	local coords = coords
 
 	if coords == nil then
 		local playerPed = PlayerPedId()
-		coords          = GetEntityCoords(playerPed)
+		coords = GetEntityCoords(playerPed)
 	end
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = #(vehicleCoords - coords)
+		local distance = #(vehicleCoords - coords)
 
 		if closestDistance == -1 or closestDistance > distance then
-			closestVehicle  = vehicles[i]
+			closestVehicle = vehicles[i]
 			closestDistance = distance
 		end
 	end
@@ -550,12 +550,12 @@ ESX.Game.GetClosestVehicle = function(coords)
 end
 
 ESX.Game.GetVehiclesInArea = function(coords, area)
-	local vehicles       = ESX.Game.GetVehicles()
+	local vehicles = ESX.Game.GetVehicles()
 	local vehiclesInArea = {}
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = #(vehicleCoords - coords)
+		local distance = #(vehicleCoords - coords)
 
 		if distance <= area then
 			table.insert(vehiclesInArea, vehicles[i])
@@ -566,10 +566,10 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
 end
 
 ESX.Game.GetVehicleInDirection = function()
-	local playerPed    = PlayerPedId()
+	local playerPed = PlayerPedId()
 	local playerCoords = GetEntityCoords(playerPed)
-	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
-	local rayHandle    = StartShapeTestRay(playerCoords, inDirection, 10, playerPed, 0)
+	local inDirection = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
+	local rayHandle = StartShapeTestRay(playerCoords, inDirection, 10, playerPed, 0)
 	local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
 
 	if hit == 1 and GetEntityType(entityHit) == 2 then
@@ -587,7 +587,7 @@ end
 
 ESX.Game.GetPeds = function(ignoreList)
 	local ignoreList = ignoreList or {}
-	local peds       = {}
+	local peds = {}
 
 	for ped in EnumeratePeds() do
 		local found = false
@@ -607,17 +607,17 @@ ESX.Game.GetPeds = function(ignoreList)
 end
 
 ESX.Game.GetClosestPed = function(coords, ignoreList)
-	local ignoreList      = ignoreList or {}
-	local peds            = ESX.Game.GetPeds(ignoreList)
+	local ignoreList = ignoreList or {}
+	local peds = ESX.Game.GetPeds(ignoreList)
 	local closestDistance = -1
-	local closestPed      = -1
+	local closestPed = -1
 
 	for i=1, #peds, 1 do
 		local pedCoords = GetEntityCoords(peds[i])
-		local distance  = #(pedCoords - coords)
+		local distance = #(pedCoords - coords)
 
 		if closestDistance == -1 or closestDistance > distance then
-			closestPed      = peds[i]
+			closestPed = peds[i]
 			closestDistance = distance
 		end
 	end
@@ -639,84 +639,84 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 	return {
 
-		model             = GetEntityModel(vehicle),
+		model = GetEntityModel(vehicle),
 
-		plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
-		plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
+		plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
+		plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
 
-		health            = GetEntityHealth(vehicle),
-		dirtLevel         = GetVehicleDirtLevel(vehicle),
+		health = GetEntityHealth(vehicle),
+		dirtLevel = GetVehicleDirtLevel(vehicle),
 
-		color1            = color1,
-		color2            = color2,
+		color1 = color1,
+		color2 = color2,
 
-		pearlescentColor  = pearlescentColor,
-		wheelColor        = wheelColor,
+		pearlescentColor = pearlescentColor,
+		wheelColor = wheelColor,
 
-		wheels            = GetVehicleWheelType(vehicle),
-		windowTint        = GetVehicleWindowTint(vehicle),
+		wheels = GetVehicleWheelType(vehicle),
+		windowTint = GetVehicleWindowTint(vehicle),
 
-		neonEnabled       = {
+		neonEnabled = {
 			IsVehicleNeonLightEnabled(vehicle, 0),
 			IsVehicleNeonLightEnabled(vehicle, 1),
 			IsVehicleNeonLightEnabled(vehicle, 2),
 			IsVehicleNeonLightEnabled(vehicle, 3)
 		},
 
-		extras            = extras,
+		extras = extras,
 
-		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
-		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+		neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
+		tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
-		modSpoilers       = GetVehicleMod(vehicle, 0),
-		modFrontBumper    = GetVehicleMod(vehicle, 1),
-		modRearBumper     = GetVehicleMod(vehicle, 2),
-		modSideSkirt      = GetVehicleMod(vehicle, 3),
-		modExhaust        = GetVehicleMod(vehicle, 4),
-		modFrame          = GetVehicleMod(vehicle, 5),
-		modGrille         = GetVehicleMod(vehicle, 6),
-		modHood           = GetVehicleMod(vehicle, 7),
-		modFender         = GetVehicleMod(vehicle, 8),
-		modRightFender    = GetVehicleMod(vehicle, 9),
-		modRoof           = GetVehicleMod(vehicle, 10),
+		modSpoilers = GetVehicleMod(vehicle, 0),
+		modFrontBumper = GetVehicleMod(vehicle, 1),
+		modRearBumper = GetVehicleMod(vehicle, 2),
+		modSideSkirt = GetVehicleMod(vehicle, 3),
+		modExhaust = GetVehicleMod(vehicle, 4),
+		modFrame = GetVehicleMod(vehicle, 5),
+		modGrille = GetVehicleMod(vehicle, 6),
+		modHood = GetVehicleMod(vehicle, 7),
+		modFender = GetVehicleMod(vehicle, 8),
+		modRightFender = GetVehicleMod(vehicle, 9),
+		modRoof = GetVehicleMod(vehicle, 10),
 
-		modEngine         = GetVehicleMod(vehicle, 11),
-		modBrakes         = GetVehicleMod(vehicle, 12),
-		modTransmission   = GetVehicleMod(vehicle, 13),
-		modHorns          = GetVehicleMod(vehicle, 14),
-		modSuspension     = GetVehicleMod(vehicle, 15),
-		modArmor          = GetVehicleMod(vehicle, 16),
+		modEngine = GetVehicleMod(vehicle, 11),
+		modBrakes = GetVehicleMod(vehicle, 12),
+		modTransmission = GetVehicleMod(vehicle, 13),
+		modHorns = GetVehicleMod(vehicle, 14),
+		modSuspension = GetVehicleMod(vehicle, 15),
+		modArmor = GetVehicleMod(vehicle, 16),
 
-		modTurbo          = IsToggleModOn(vehicle, 18),
-		modSmokeEnabled   = IsToggleModOn(vehicle, 20),
-		modXenon          = IsToggleModOn(vehicle, 22),
+		modTurbo = IsToggleModOn(vehicle, 18),
+		modSmokeEnabled = IsToggleModOn(vehicle, 20),
+		modXenon = IsToggleModOn(vehicle, 22),
 
-		modFrontWheels    = GetVehicleMod(vehicle, 23),
-		modBackWheels     = GetVehicleMod(vehicle, 24),
+		modFrontWheels = GetVehicleMod(vehicle, 23),
+		modBackWheels = GetVehicleMod(vehicle, 24),
 
-		modPlateHolder    = GetVehicleMod(vehicle, 25),
-		modVanityPlate    = GetVehicleMod(vehicle, 26),
-		modTrimA          = GetVehicleMod(vehicle, 27),
-		modOrnaments      = GetVehicleMod(vehicle, 28),
-		modDashboard      = GetVehicleMod(vehicle, 29),
-		modDial           = GetVehicleMod(vehicle, 30),
-		modDoorSpeaker    = GetVehicleMod(vehicle, 31),
-		modSeats          = GetVehicleMod(vehicle, 32),
-		modSteeringWheel  = GetVehicleMod(vehicle, 33),
+		modPlateHolder = GetVehicleMod(vehicle, 25),
+		modVanityPlate = GetVehicleMod(vehicle, 26),
+		modTrimA = GetVehicleMod(vehicle, 27),
+		modOrnaments = GetVehicleMod(vehicle, 28),
+		modDashboard = GetVehicleMod(vehicle, 29),
+		modDial = GetVehicleMod(vehicle, 30),
+		modDoorSpeaker = GetVehicleMod(vehicle, 31),
+		modSeats = GetVehicleMod(vehicle, 32),
+		modSteeringWheel = GetVehicleMod(vehicle, 33),
 		modShifterLeavers = GetVehicleMod(vehicle, 34),
-		modAPlate         = GetVehicleMod(vehicle, 35),
-		modSpeakers       = GetVehicleMod(vehicle, 36),
-		modTrunk          = GetVehicleMod(vehicle, 37),
-		modHydrolic       = GetVehicleMod(vehicle, 38),
-		modEngineBlock    = GetVehicleMod(vehicle, 39),
-		modAirFilter      = GetVehicleMod(vehicle, 40),
-		modStruts         = GetVehicleMod(vehicle, 41),
-		modArchCover      = GetVehicleMod(vehicle, 42),
-		modAerials        = GetVehicleMod(vehicle, 43),
-		modTrimB          = GetVehicleMod(vehicle, 44),
-		modTank           = GetVehicleMod(vehicle, 45),
-		modWindows        = GetVehicleMod(vehicle, 46),
-		modLivery         = GetVehicleLivery(vehicle)
+		modAPlate = GetVehicleMod(vehicle, 35),
+		modSpeakers = GetVehicleMod(vehicle, 36),
+		modTrunk = GetVehicleMod(vehicle, 37),
+		modHydrolic = GetVehicleMod(vehicle, 38),
+		modEngineBlock = GetVehicleMod(vehicle, 39),
+		modAirFilter = GetVehicleMod(vehicle, 40),
+		modStruts = GetVehicleMod(vehicle, 41),
+		modArchCover = GetVehicleMod(vehicle, 42),
+		modAerials = GetVehicleMod(vehicle, 43),
+		modTrimB = GetVehicleMod(vehicle, 44),
+		modTank = GetVehicleMod(vehicle, 45),
+		modWindows = GetVehicleMod(vehicle, 46),
+		modLivery = GetVehicleLivery(vehicle)
 	}
 end
 
@@ -865,11 +865,11 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 
 	if props.modTurbo ~= nil then
-		ToggleVehicleMod(vehicle,  18, props.modTurbo)
+		ToggleVehicleMod(vehicle, 18, props.modTurbo)
 	end
 
 	if props.modXenon ~= nil then
-		ToggleVehicleMod(vehicle,  22, props.modXenon)
+		ToggleVehicleMod(vehicle, 22, props.modXenon)
 	end
 
 	if props.modFrontWheels ~= nil then
@@ -976,16 +976,16 @@ end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
 	local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
-	local camCoords      = GetGameplayCamCoords()
-	local dist           = #(camCoords - coords)
-	local size           = size
+	local camCoords = GetGameplayCamCoords()
+	local dist = #(camCoords - coords)
+	local size = size
 
 	if size == nil then
 		size = 1
 	end
 
 	local scale = (size / dist) * 2
-	local fov   = (1 / GetGameplayCamFov()) * 100
+	local fov = (1 / GetGameplayCamFov()) * 100
 	local scale = scale * fov
 
 	if onScreen then
@@ -1005,18 +1005,18 @@ end
 
 ESX.ShowInventory = function()
 	local playerPed = PlayerPedId()
-	local elements  = {}
+	local elements = {}
 
 	if ESX.PlayerData.money > 0 then
 		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(ESX.PlayerData.money))
 
 		table.insert(elements, {
-			label     = ('%s: <span style="color:green;">%s</span>'):format(_U('cash'), formattedMoney),
-			count     = ESX.PlayerData.money,
-			type      = 'item_money',
-			value     = 'money',
-			usable    = false,
-			rare      = false,
+			label = ('%s: <span style="color:green;">%s</span>'):format(_U('cash'), formattedMoney),
+			count = ESX.PlayerData.money,
+			type = 'item_money',
+			value = 'money',
+			usable = false,
+			rare = false,
 			canRemove = true
 		})
 	end
@@ -1027,12 +1027,12 @@ ESX.ShowInventory = function()
 			local canDrop = ESX.PlayerData.accounts[i].name ~= 'bank'
 
 			table.insert(elements, {
-				label     = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
-				count     = ESX.PlayerData.accounts[i].money,
-				type      = 'item_account',
-				value     = ESX.PlayerData.accounts[i].name,
-				usable    = false,
-				rare      = false,
+				label = ('%s: <span style="color:green;">%s</span>'):format(ESX.PlayerData.accounts[i].label, formattedMoney),
+				count = ESX.PlayerData.accounts[i].money,
+				type = 'item_account',
+				value = ESX.PlayerData.accounts[i].name,
+				usable = false,
+				rare = false,
 				canRemove = canDrop
 			})
 		end
@@ -1041,12 +1041,12 @@ ESX.ShowInventory = function()
 	for i=1, #ESX.PlayerData.inventory, 1 do
 		if ESX.PlayerData.inventory[i].count > 0 then
 			table.insert(elements, {
-				label     = ESX.PlayerData.inventory[i].label .. ' x' .. ESX.PlayerData.inventory[i].count,
-				count     = ESX.PlayerData.inventory[i].count,
-				type      = 'item_standard',
-				value     = ESX.PlayerData.inventory[i].name,
-				usable    = ESX.PlayerData.inventory[i].usable,
-				rare      = ESX.PlayerData.inventory[i].rare,
+				label = ESX.PlayerData.inventory[i].label .. ' x' .. ESX.PlayerData.inventory[i].count,
+				count = ESX.PlayerData.inventory[i].count,
+				type = 'item_standard',
+				value = ESX.PlayerData.inventory[i].name,
+				usable = ESX.PlayerData.inventory[i].usable,
+				rare = ESX.PlayerData.inventory[i].rare,
 				canRemove = ESX.PlayerData.inventory[i].canRemove
 			})
 		end
@@ -1058,13 +1058,13 @@ ESX.ShowInventory = function()
 		if HasPedGotWeapon(playerPed, weaponHash, false) and Config.Weapons[i].name ~= 'WEAPON_UNARMED' then
 			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
 			table.insert(elements, {
-				label     = Config.Weapons[i].label .. ' [' .. ammo .. ']',
-				count     = 1,
-				type      = 'item_weapon',
-				value     = Config.Weapons[i].name,
-				ammo      = ammo,
-				usable    = false,
-				rare      = false,
+				label = Config.Weapons[i].label .. ' [' .. ammo .. ']',
+				count = 1,
+				type = 'item_weapon',
+				value = Config.Weapons[i].name,
+				ammo = ammo,
+				usable = false,
+				rare = false,
 				canRemove = true
 			})
 		end
@@ -1074,8 +1074,8 @@ ESX.ShowInventory = function()
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory',
 	{
-		title    = _U('inventory'),
-		align    = 'bottom-right',
+		title = _U('inventory'),
+		align = 'bottom-right',
 		elements = elements,
 	}, function(data, menu)
 		menu.close()
@@ -1103,8 +1103,8 @@ ESX.ShowInventory = function()
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory_item',
 		{
-			title    = data.current.label,
-			align    = 'bottom-right',
+			title = data.current.label,
+			align = 'bottom-right',
 			elements = elements,
 		}, function(data1, menu1)
 
@@ -1114,9 +1114,9 @@ ESX.ShowInventory = function()
 
 			if data1.current.action == 'give' then
 
-				local players      = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
+				local players = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
 				local foundPlayers = false
-				local elements     = {}
+				local elements = {}
 
 				for i=1, #players, 1 do
 					if players[i] ~= PlayerId() then
@@ -1138,8 +1138,8 @@ ESX.ShowInventory = function()
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to',
 				{
-					title    = _U('give_to'),
-					align    = 'bottom-right',
+					title = _U('give_to'),
+					align = 'bottom-right',
 					elements = elements
 				}, function(data2, menu2)
 

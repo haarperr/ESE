@@ -1,15 +1,15 @@
 function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, lastPosition)
 	local self = {}
 
-	self.player       = player
-	self.accounts     = accounts
-	self.inventory    = inventory
-	self.job          = job
-	self.loadout      = loadout
-	self.name         = name
+	self.player = player
+	self.accounts = accounts
+	self.inventory = inventory
+	self.job = job
+	self.loadout = loadout
+	self.name = name
 	self.lastPosition = lastPosition
 
-	self.source     = self.player.get('source')
+	self.source = self.player.get('source')
 	self.identifier = self.player.get('identifier')
 
 	self.setMoney = function(money)
@@ -143,7 +143,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			if Config.Accounts[i] == 'bank' then
 
 				table.insert(accounts, {
-					name  = 'bank',
+					name = 'bank',
 					money = self.get('bank'),
 					label = Config.AccountLabels['bank']
 				})
@@ -165,7 +165,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	self.getAccount = function(a)
 		if a == 'bank' then
 			return {
-				name  = 'bank',
+				name = 'bank',
 				money = self.get('bank'),
 				label = Config.AccountLabels['bank']
 			}
@@ -243,7 +243,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		for i=1, #missingAccounts, 1 do
 			MySQL.Async.execute('INSERT INTO `user_accounts` (identifier, name) VALUES (@identifier, @name)', {
 				['@identifier'] = self.getIdentifier(),
-				['@name']       = missingAccounts[i]
+				['@name'] = missingAccounts[i]
 			}, function(rowsChanged)
 				if cb ~= nil then
 					cb()
@@ -258,9 +258,9 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			return
 		end
 
-		local account   = self.getAccount(acc)
+		local account = self.getAccount(acc)
 		local prevMoney = account.money
-		local newMoney  = ESX.Math.Round(money)
+		local newMoney = ESX.Math.Round(money)
 
 		account.money = newMoney
 
@@ -277,7 +277,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			return
 		end
 
-		local account  = self.getAccount(acc)
+		local account = self.getAccount(acc)
 		local newMoney = account.money + ESX.Math.Round(money)
 
 		account.money = newMoney
@@ -295,7 +295,7 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 			return
 		end
 
-		local account  = self.getAccount(acc)
+		local account = self.getAccount(acc)
 		local newMoney = account.money - ESX.Math.Round(money)
 
 		account.money = newMoney
@@ -316,29 +316,29 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 	end
 
 	self.addInventoryItem = function(name, count)
-		local item     = self.getInventoryItem(name)
+		local item = self.getInventoryItem(name)
 		local newCount = item.count + count
-		item.count     = newCount
+		item.count = newCount
 
 		TriggerEvent('esx:onAddInventoryItem', self.source, item, count)
 		TriggerClientEvent('esx:addInventoryItem', self.source, item, count)
 	end
 
 	self.removeInventoryItem = function(name, count)
-		local item     = self.getInventoryItem(name)
+		local item = self.getInventoryItem(name)
 		local newCount = item.count - count
-		item.count     = newCount
+		item.count = newCount
 
 		TriggerEvent('esx:onRemoveInventoryItem', self.source, item, count)
 		TriggerClientEvent('esx:removeInventoryItem', self.source, item, count)
 	end
 
 	self.setInventoryItem = function(name, count)
-		local item     = self.getInventoryItem(name)
+		local item = self.getInventoryItem(name)
 		local oldCount = item.count
-		item.count     = count
+		item.count = count
 
-		if oldCount > item.count  then
+		if oldCount > item.count then
 			TriggerEvent('esx:onRemoveInventoryItem', self.source, item, oldCount - item.count)
 			TriggerClientEvent('esx:removeInventoryItem', self.source, item, oldCount - item.count)
 		else
@@ -354,17 +354,17 @@ function CreateExtendedPlayer(player, accounts, inventory, job, loadout, name, l
 		if ESX.DoesJobExist(job, grade) then
 			local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
-			self.job.id    = jobObject.id
-			self.job.name  = jobObject.name
+			self.job.id = jobObject.id
+			self.job.name = jobObject.name
 			self.job.label = jobObject.label
 
-			self.job.grade        = tonumber(grade)
-			self.job.grade_name   = gradeObject.name
-			self.job.grade_label  = gradeObject.label
+			self.job.grade = tonumber(grade)
+			self.job.grade_name = gradeObject.name
+			self.job.grade_label = gradeObject.label
 			self.job.grade_salary = gradeObject.salary
 
-			self.job.skin_male    = {}
-			self.job.skin_female  = {}
+			self.job.skin_male = {}
+			self.job.skin_female = {}
 
 			if gradeObject.skin_male ~= nil then
 				self.job.skin_male = json.decode(gradeObject.skin_male)

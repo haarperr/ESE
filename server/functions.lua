@@ -45,9 +45,9 @@ ESX.SavePlayer = function(xPlayer, cb)
 		if ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] ~= xPlayer.accounts[i].money then
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_accounts SET `money` = @money WHERE identifier = @identifier AND name = @name', {
-					['@money']      = xPlayer.accounts[i].money,
+					['@money'] = xPlayer.accounts[i].money,
 					['@identifier'] = xPlayer.identifier,
-					['@name']       = xPlayer.accounts[i].name
+					['@name'] = xPlayer.accounts[i].name
 				}, function(rowsChanged)
 					cb()
 				end)
@@ -62,9 +62,9 @@ ESX.SavePlayer = function(xPlayer, cb)
 		if ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] ~= xPlayer.inventory[i].count then
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_inventory SET `count` = @count WHERE identifier = @identifier AND item = @item', {
-					['@count']      = xPlayer.inventory[i].count,
+					['@count'] = xPlayer.inventory[i].count,
 					['@identifier'] = xPlayer.identifier,
-					['@item']       = xPlayer.inventory[i].name
+					['@item'] = xPlayer.inventory[i].name
 				}, function(rowsChanged)
 					cb()
 				end)
@@ -77,10 +77,10 @@ ESX.SavePlayer = function(xPlayer, cb)
 	-- Job, loadout and position
 	table.insert(asyncTasks, function(cb)
 		MySQL.Async.execute('UPDATE users SET `job` = @job, `job_grade` = @job_grade, `loadout` = @loadout, `position` = @position WHERE identifier = @identifier', {
-			['@job']        = xPlayer.job.name,
-			['@job_grade']  = xPlayer.job.grade,
-			['@loadout']    = json.encode(xPlayer.getLoadout()),
-			['@position']   = json.encode(xPlayer.getLastPosition()),
+			['@job'] = xPlayer.job.name,
+			['@job_grade'] = xPlayer.job.grade,
+			['@loadout'] = json.encode(xPlayer.getLoadout()),
+			['@position'] = json.encode(xPlayer.getLastPosition()),
 			['@identifier'] = xPlayer.identifier
 		}, function(rowsChanged)
 			cb()
@@ -98,7 +98,7 @@ end
 
 ESX.SavePlayers = function(cb)
 	local asyncTasks = {}
-	local xPlayers   = ESX.GetPlayers()
+	local xPlayers = ESX.GetPlayers()
 
 	for i=1, #xPlayers, 1 do
 		table.insert(asyncTasks, function(cb)
@@ -166,8 +166,8 @@ ESX.CreatePickup = function(type, name, count, label, player)
 	local pickupId = (ESX.PickupId == 65635 and 0 or ESX.PickupId + 1)
 
 	ESX.Pickups[pickupId] = {
-		type  = type,
-		name  = name,
+		type = type,
+		name = name,
 		count = count
 	}
 
