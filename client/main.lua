@@ -494,7 +494,7 @@ Citizen.CreateThread(function()
 		end
 
 		for k,v in pairs(pickups) do
-			local distance = GetDistanceBetweenCoords(coords, v.coords.x, v.coords.y, v.coords.z, true)
+			local distance = #(coords - v.coords)
 			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 			if distance <= 5.0 then

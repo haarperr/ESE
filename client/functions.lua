@@ -441,7 +441,7 @@ ESX.Game.GetClosestObject = function(filter, coords)
 
 		if foundObject then
 			local objectCoords = GetEntityCoords(objects[i])
-			local distance     = GetDistanceBetweenCoords(objectCoords, coords.x, coords.y, coords.z, true)
+			local distance     = #(objectCoords - coords)
 
 			if closestDistance == -1 or closestDistance > distance then
 				closestObject   = objects[i]
@@ -486,7 +486,7 @@ ESX.Game.GetClosestPlayer = function(coords)
 
 		if not usePlayerPed or (usePlayerPed and players[i] ~= playerId) then
 			local targetCoords = GetEntityCoords(target)
-			local distance     = GetDistanceBetweenCoords(targetCoords, coords.x, coords.y, coords.z, true)
+			local distance     = #(targetCoords - coords)
 
 			if closestDistance == -1 or closestDistance > distance then
 				closestPlayer   = players[i]
@@ -505,7 +505,7 @@ ESX.Game.GetPlayersInArea = function(coords, area)
 	for i=1, #players, 1 do
 		local target       = GetPlayerPed(players[i])
 		local targetCoords = GetEntityCoords(target)
-		local distance     = GetDistanceBetweenCoords(targetCoords, coords.x, coords.y, coords.z, true)
+		local distance     = #(targetCoords - coords)
 
 		if distance <= area then
 			table.insert(playersInArea, players[i])
@@ -538,7 +538,7 @@ ESX.Game.GetClosestVehicle = function(coords)
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = GetDistanceBetweenCoords(vehicleCoords, coords.x, coords.y, coords.z, true)
+		local distance      = #(vehicleCoords - coords)
 
 		if closestDistance == -1 or closestDistance > distance then
 			closestVehicle  = vehicles[i]
@@ -555,7 +555,7 @@ ESX.Game.GetVehiclesInArea = function(coords, area)
 
 	for i=1, #vehicles, 1 do
 		local vehicleCoords = GetEntityCoords(vehicles[i])
-		local distance      = GetDistanceBetweenCoords(vehicleCoords, coords.x, coords.y, coords.z, true)
+		local distance      = #(vehicleCoords - coords)
 
 		if distance <= area then
 			table.insert(vehiclesInArea, vehicles[i])
@@ -614,7 +614,7 @@ ESX.Game.GetClosestPed = function(coords, ignoreList)
 
 	for i=1, #peds, 1 do
 		local pedCoords = GetEntityCoords(peds[i])
-		local distance  = GetDistanceBetweenCoords(pedCoords, coords.x, coords.y, coords.z, true)
+		local distance  = #(pedCoords - coords)
 
 		if closestDistance == -1 or closestDistance > distance then
 			closestPed      = peds[i]
@@ -977,7 +977,7 @@ end
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
 	local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
 	local camCoords      = GetGameplayCamCoords()
-	local dist           = GetDistanceBetweenCoords(camCoords, coords.x, coords.y, coords.z, true)
+	local dist           = #(camCoords - coords)
 	local size           = size
 
 	if size == nil then
