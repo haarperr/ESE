@@ -159,7 +159,8 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	ESX.PlayerData.job = job
+	local thisJob = job
+	ESX.PlayerData.job = thisJob
 end)
 
 RegisterNetEvent('esx:addWeapon')
@@ -216,8 +217,7 @@ AddEventHandler('esx:teleport', function(pos)
 	RequestCollisionAtCoord(pos.x, pos.y, pos.z)
 
 	while not HasCollisionLoadedAroundEntity(PlayerPedId()) do
-		RequestCollisionAtCoord(pos.x, pos.y, pos.z)
-		Citizen.Wait(1)
+		Citizen.Wait(0)
 	end
 
 	SetEntityCoords(PlayerPedId(), pos.x, pos.y, pos.z)
@@ -255,7 +255,7 @@ AddEventHandler('esx:playAnim', function(dict, anim)
 		RequestAnimDict(dict)
 
 		while not HasAnimDictLoaded(dict) do
-			Citizen.Wait(1)
+			Citizen.Wait(0)
 		end
 
 		TaskPlayAnim(playerPed, dict, anim, 1.0, -1.0, 20000, 0, 1, true, true, true)
@@ -358,7 +358,7 @@ AddEventHandler('esx:spawnPed', function(model)
 		RequestModel(model)
 
 		while not HasModelLoaded(model) do
-			Citizen.Wait(1)
+			Citizen.Wait(0)
 		end
 
 		CreatePed(5, model, x, y, z, 0.0, true, false)

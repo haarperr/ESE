@@ -338,7 +338,7 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
-		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, true, false)
+		local vehicle = CreateVehicle(model, coords, heading, true, false)
 		local id = NetworkGetNetworkIdFromEntity(vehicle)
 
 		SetNetworkIdCanMigrate(id, true)
@@ -347,10 +347,9 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
 		SetModelAsNoLongerNeeded(model)
 
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		RequestCollisionAtCoord(coords)
 
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 			Citizen.Wait(0)
 		end
 
@@ -368,16 +367,15 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb)
 	Citizen.CreateThread(function()
 		ESX.Streaming.RequestModel(model)
 
-		local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, heading, false, false)
+		local vehicle = CreateVehicle(model, coords, heading, false, false)
 
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
 		SetModelAsNoLongerNeeded(model)
-		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		RequestCollisionAtCoord(coords)
 
 		while not HasCollisionLoadedAroundEntity(vehicle) do
-			RequestCollisionAtCoord(coords.x, coords.y, coords.z)
 			Citizen.Wait(0)
 		end
 
@@ -529,7 +527,6 @@ ESX.Game.GetClosestVehicle = function(coords)
 	local vehicles = ESX.Game.GetVehicles()
 	local closestDistance = -1
 	local closestVehicle = -1
-	local coords = coords
 
 	if coords == nil then
 		local playerPed = PlayerPedId()
@@ -629,8 +626,16 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 	local color1, color2 = GetVehicleColours(vehicle)
 	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
 	local extras = {}
+	local livery = -1
+	
+	-- Check the livery storage method
+	if GetVehicleMod(vehicle, 48) ~= -1 then
+		livery = GetVehicleMod(vehicle, 48)
+	else
+		livery = GetVehicleLivery(vehicle)
+	end
 
-	for id=0, 12 do
+	for id=0, 20 do
 		if DoesExtraExist(vehicle, id) then
 			local state = IsVehicleExtraTurnedOn(vehicle, id) == 1
 			extras[tostring(id)] = state
@@ -639,89 +644,82 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 	return {
 
-		model = GetEntityModel(vehicle),
-
-		plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
-		plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
-
-		health = GetEntityHealth(vehicle),
-		dirtLevel = GetVehicleDirtLevel(vehicle),
-
-		color1 = color1,
-		color2 = color2,
-
-		pearlescentColor = pearlescentColor,
-		wheelColor = wheelColor,
-
-		wheels = GetVehicleWheelType(vehicle),
-		windowTint = GetVehicleWindowTint(vehicle),
-
-		neonEnabled = {
+		model             = GetEntityModel(vehicle),
+		plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
+		plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
+		health            = GetEntityHealth(vehicle),
+		dirtLevel         = GetVehicleDirtLevel(vehicle),
+		color1            = color1,
+		color2            = color2,
+		pearlescentColor  = pearlescentColor,
+		wheelColor        = wheelColor,
+		windowTint        = GetVehicleWindowTint(vehicle),
+		neonEnabled       = {
 			IsVehicleNeonLightEnabled(vehicle, 0),
 			IsVehicleNeonLightEnabled(vehicle, 1),
 			IsVehicleNeonLightEnabled(vehicle, 2),
 			IsVehicleNeonLightEnabled(vehicle, 3)
 		},
-
-		extras = extras,
-
-		neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
-		tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
-
-		modSpoilers = GetVehicleMod(vehicle, 0),
-		modFrontBumper = GetVehicleMod(vehicle, 1),
-		modRearBumper = GetVehicleMod(vehicle, 2),
-		modSideSkirt = GetVehicleMod(vehicle, 3),
-		modExhaust = GetVehicleMod(vehicle, 4),
-		modFrame = GetVehicleMod(vehicle, 5),
-		modGrille = GetVehicleMod(vehicle, 6),
-		modHood = GetVehicleMod(vehicle, 7),
-		modFender = GetVehicleMod(vehicle, 8),
-		modRightFender = GetVehicleMod(vehicle, 9),
-		modRoof = GetVehicleMod(vehicle, 10),
-
-		modEngine = GetVehicleMod(vehicle, 11),
-		modBrakes = GetVehicleMod(vehicle, 12),
-		modTransmission = GetVehicleMod(vehicle, 13),
-		modHorns = GetVehicleMod(vehicle, 14),
-		modSuspension = GetVehicleMod(vehicle, 15),
-		modArmor = GetVehicleMod(vehicle, 16),
-
-		modTurbo = IsToggleModOn(vehicle, 18),
-		modSmokeEnabled = IsToggleModOn(vehicle, 20),
-		modXenon = IsToggleModOn(vehicle, 22),
-
-		modFrontWheels = GetVehicleMod(vehicle, 23),
-		modBackWheels = GetVehicleMod(vehicle, 24),
-
-		modPlateHolder = GetVehicleMod(vehicle, 25),
-		modVanityPlate = GetVehicleMod(vehicle, 26),
-		modTrimA = GetVehicleMod(vehicle, 27),
-		modOrnaments = GetVehicleMod(vehicle, 28),
-		modDashboard = GetVehicleMod(vehicle, 29),
-		modDial = GetVehicleMod(vehicle, 30),
-		modDoorSpeaker = GetVehicleMod(vehicle, 31),
-		modSeats = GetVehicleMod(vehicle, 32),
-		modSteeringWheel = GetVehicleMod(vehicle, 33),
+		extras            = extras,
+		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
+		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+		modSpoilers       = GetVehicleMod(vehicle, 0),
+		modFrontBumper    = GetVehicleMod(vehicle, 1),
+		modRearBumper     = GetVehicleMod(vehicle, 2),
+		modSideSkirt      = GetVehicleMod(vehicle, 3),
+		modExhaust        = GetVehicleMod(vehicle, 4),
+		modFrame          = GetVehicleMod(vehicle, 5),
+		modGrille         = GetVehicleMod(vehicle, 6),
+		modHood           = GetVehicleMod(vehicle, 7),
+		modFender         = GetVehicleMod(vehicle, 8),
+		modRightFender    = GetVehicleMod(vehicle, 9),
+		modRoof           = GetVehicleMod(vehicle, 10),
+		modEngine         = GetVehicleMod(vehicle, 11),
+		modBrakes         = GetVehicleMod(vehicle, 12),
+		modTransmission   = GetVehicleMod(vehicle, 13),
+		modHorns          = GetVehicleMod(vehicle, 14),
+		modSuspension     = GetVehicleMod(vehicle, 15),
+		modArmor          = GetVehicleMod(vehicle, 16),
+		modUnk1			  = GetVehicleMod(vehicle, 17),
+		modTurbo          = IsToggleModOn(vehicle, 18),
+		modUnk2			  = GetVehicleMod(vehicle, 19),
+		modSmokeEnabled   = IsToggleModOn(vehicle, 20),
+		modUnk3			  = GetVehicleMod(vehicle, 21),
+		modXenon          = IsToggleModOn(vehicle, 22),
+		modFrontWheels    = GetVehicleMod(vehicle, 23),
+		modBackWheels     = GetVehicleMod(vehicle, 24),
+		modWheelType	  = GetVehicleWheelType(vehicle),
+		modCustomTires 	  = GetVehicleModVariation(vehicle, 23),
+		modPlateHolder    = GetVehicleMod(vehicle, 25),
+		modVanityPlate    = GetVehicleMod(vehicle, 26),
+		modTrimA          = GetVehicleMod(vehicle, 27),
+		modOrnaments      = GetVehicleMod(vehicle, 28),
+		modDashboard      = GetVehicleMod(vehicle, 29),
+		modDial           = GetVehicleMod(vehicle, 30),
+		modDoorSpeaker    = GetVehicleMod(vehicle, 31),
+		modSeats          = GetVehicleMod(vehicle, 32),
+		modSteeringWheel  = GetVehicleMod(vehicle, 33),
 		modShifterLeavers = GetVehicleMod(vehicle, 34),
-		modAPlate = GetVehicleMod(vehicle, 35),
-		modSpeakers = GetVehicleMod(vehicle, 36),
-		modTrunk = GetVehicleMod(vehicle, 37),
-		modHydrolic = GetVehicleMod(vehicle, 38),
-		modEngineBlock = GetVehicleMod(vehicle, 39),
-		modAirFilter = GetVehicleMod(vehicle, 40),
-		modStruts = GetVehicleMod(vehicle, 41),
-		modArchCover = GetVehicleMod(vehicle, 42),
-		modAerials = GetVehicleMod(vehicle, 43),
-		modTrimB = GetVehicleMod(vehicle, 44),
-		modTank = GetVehicleMod(vehicle, 45),
-		modWindows = GetVehicleMod(vehicle, 46),
-		modLivery = GetVehicleLivery(vehicle)
+		modAPlate         = GetVehicleMod(vehicle, 35),
+		modSpeakers       = GetVehicleMod(vehicle, 36),
+		modTrunk          = GetVehicleMod(vehicle, 37),
+		modHydrolic       = GetVehicleMod(vehicle, 38),
+		modEngineBlock    = GetVehicleMod(vehicle, 39),
+		modAirFilter      = GetVehicleMod(vehicle, 40),
+		modStruts         = GetVehicleMod(vehicle, 41),
+		modArchCover      = GetVehicleMod(vehicle, 42),
+		modAerials        = GetVehicleMod(vehicle, 43),
+		modTrimB          = GetVehicleMod(vehicle, 44),
+		modTank           = GetVehicleMod(vehicle, 45),
+		modWindows        = GetVehicleMod(vehicle, 46),
+		modUnk4        	  = GetVehicleMod(vehicle, 47),
+		modLivery		  = livery
 	}
 end
 
 ESX.Game.SetVehicleProperties = function(vehicle, props)
 	SetVehicleModKit(vehicle, 0)
+	local customTires = props.modCustomTires
 
 	if props.plate ~= nil then
 		SetVehicleNumberPlateText(vehicle, props.plate)
@@ -797,75 +795,87 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 
 	if props.modSpoilers ~= nil then
-		SetVehicleMod(vehicle, 0, props.modSpoilers, false)
+		SetVehicleMod(vehicle, 0, props.modSpoilers, customTires)
 	end
 
 	if props.modFrontBumper ~= nil then
-		SetVehicleMod(vehicle, 1, props.modFrontBumper, false)
+		SetVehicleMod(vehicle, 1, props.modFrontBumper, customTires)
 	end
 
 	if props.modRearBumper ~= nil then
-		SetVehicleMod(vehicle, 2, props.modRearBumper, false)
+		SetVehicleMod(vehicle, 2, props.modRearBumper, customTires)
 	end
 
 	if props.modSideSkirt ~= nil then
-		SetVehicleMod(vehicle, 3, props.modSideSkirt, false)
+		SetVehicleMod(vehicle, 3, props.modSideSkirt, customTires)
 	end
 
 	if props.modExhaust ~= nil then
-		SetVehicleMod(vehicle, 4, props.modExhaust, false)
+		SetVehicleMod(vehicle, 4, props.modExhaust, customTires)
 	end
 
 	if props.modFrame ~= nil then
-		SetVehicleMod(vehicle, 5, props.modFrame, false)
+		SetVehicleMod(vehicle, 5, props.modFrame, customTires)
 	end
 
 	if props.modGrille ~= nil then
-		SetVehicleMod(vehicle, 6, props.modGrille, false)
+		SetVehicleMod(vehicle, 6, props.modGrille, customTires)
 	end
 
 	if props.modHood ~= nil then
-		SetVehicleMod(vehicle, 7, props.modHood, false)
+		SetVehicleMod(vehicle, 7, props.modHood, customTires)
 	end
 
 	if props.modFender ~= nil then
-		SetVehicleMod(vehicle, 8, props.modFender, false)
+		SetVehicleMod(vehicle, 8, props.modFender, customTires)
 	end
 
 	if props.modRightFender ~= nil then
-		SetVehicleMod(vehicle, 9, props.modRightFender, false)
+		SetVehicleMod(vehicle, 9, props.modRightFender, customTires)
 	end
 
 	if props.modRoof ~= nil then
-		SetVehicleMod(vehicle, 10, props.modRoof, false)
+		SetVehicleMod(vehicle, 10, props.modRoof, customTires)
 	end
 
 	if props.modEngine ~= nil then
-		SetVehicleMod(vehicle, 11, props.modEngine, false)
+		SetVehicleMod(vehicle, 11, props.modEngine, customTires)
 	end
 
 	if props.modBrakes ~= nil then
-		SetVehicleMod(vehicle, 12, props.modBrakes, false)
+		SetVehicleMod(vehicle, 12, props.modBrakes, customTires)
 	end
 
 	if props.modTransmission ~= nil then
-		SetVehicleMod(vehicle, 13, props.modTransmission, false)
+		SetVehicleMod(vehicle, 13, props.modTransmission, customTires)
 	end
 
 	if props.modHorns ~= nil then
-		SetVehicleMod(vehicle, 14, props.modHorns, false)
+		SetVehicleMod(vehicle, 14, props.modHorns, customTires)
 	end
 
 	if props.modSuspension ~= nil then
-		SetVehicleMod(vehicle, 15, props.modSuspension, false)
+		SetVehicleMod(vehicle, 15, props.modSuspension, customTires)
 	end
 
 	if props.modArmor ~= nil then
-		SetVehicleMod(vehicle, 16, props.modArmor, false)
+		SetVehicleMod(vehicle, 16, props.modArmor, customTires)
+	end
+
+	if props.modUnk1 ~= nil then
+		SetVehicleMod(vehicle, 17, props.modUnk1, customTires)
 	end
 
 	if props.modTurbo ~= nil then
 		ToggleVehicleMod(vehicle, 18, props.modTurbo)
+	end
+
+	if props.modUnk2 ~= nil then
+		SetVehicleMod(vehicle, 19, props.modUnk2, customTires)
+	end
+
+	if props.modUnk3 ~= nil then
+		SetVehicleMod(vehicle, 21, props.modUnk3, customTires)
 	end
 
 	if props.modXenon ~= nil then
@@ -873,109 +883,111 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 
 	if props.modFrontWheels ~= nil then
-		SetVehicleMod(vehicle, 23, props.modFrontWheels, false)
+		SetVehicleMod(vehicle, 23, props.modFrontWheels, customTires)
+		SetVehicleWheelType(vehicle, props.modWheelType)
 	end
 
 	if props.modBackWheels ~= nil then
-		SetVehicleMod(vehicle, 24, props.modBackWheels, false)
+		SetVehicleMod(vehicle, 24, props.modBackWheels, customTires)
+		SetVehicleWheelType(vehicle, props.modWheelType)
 	end
 
 	if props.modPlateHolder ~= nil then
-		SetVehicleMod(vehicle, 25, props.modPlateHolder, false)
+		SetVehicleMod(vehicle, 25, props.modPlateHolder, customTires)
 	end
 
 	if props.modVanityPlate ~= nil then
-		SetVehicleMod(vehicle, 26, props.modVanityPlate, false)
+		SetVehicleMod(vehicle, 26, props.modVanityPlate, customTires)
 	end
 
 	if props.modTrimA ~= nil then
-		SetVehicleMod(vehicle, 27, props.modTrimA, false)
+		SetVehicleMod(vehicle, 27, props.modTrimA, customTires)
 	end
 
 	if props.modOrnaments ~= nil then
-		SetVehicleMod(vehicle, 28, props.modOrnaments, false)
+		SetVehicleMod(vehicle, 28, props.modOrnaments, customTires)
 	end
 
 	if props.modDashboard ~= nil then
-		SetVehicleMod(vehicle, 29, props.modDashboard, false)
+		SetVehicleMod(vehicle, 29, props.modDashboard, customTires)
 	end
 
 	if props.modDial ~= nil then
-		SetVehicleMod(vehicle, 30, props.modDial, false)
+		SetVehicleMod(vehicle, 30, props.modDial, customTires)
 	end
 
 	if props.modDoorSpeaker ~= nil then
-		SetVehicleMod(vehicle, 31, props.modDoorSpeaker, false)
+		SetVehicleMod(vehicle, 31, props.modDoorSpeaker, customTires)
 	end
 
 	if props.modSeats ~= nil then
-		SetVehicleMod(vehicle, 32, props.modSeats, false)
+		SetVehicleMod(vehicle, 32, props.modSeats, customTires)
 	end
 
 	if props.modSteeringWheel ~= nil then
-		SetVehicleMod(vehicle, 33, props.modSteeringWheel, false)
+		SetVehicleMod(vehicle, 33, props.modSteeringWheel, customTires)
 	end
 
 	if props.modShifterLeavers ~= nil then
-		SetVehicleMod(vehicle, 34, props.modShifterLeavers, false)
+		SetVehicleMod(vehicle, 34, props.modShifterLeavers, customTires)
 	end
 
 	if props.modAPlate ~= nil then
-		SetVehicleMod(vehicle, 35, props.modAPlate, false)
+		SetVehicleMod(vehicle, 35, props.modAPlate, customTires)
 	end
 
 	if props.modSpeakers ~= nil then
-		SetVehicleMod(vehicle, 36, props.modSpeakers, false)
+		SetVehicleMod(vehicle, 36, props.modSpeakers, customTires)
 	end
 
 	if props.modTrunk ~= nil then
-		SetVehicleMod(vehicle, 37, props.modTrunk, false)
+		SetVehicleMod(vehicle, 37, props.modTrunk, customTires)
 	end
 
 	if props.modHydrolic ~= nil then
-		SetVehicleMod(vehicle, 38, props.modHydrolic, false)
+		SetVehicleMod(vehicle, 38, props.modHydrolic, customTires)
 	end
 
 	if props.modEngineBlock ~= nil then
-		SetVehicleMod(vehicle, 39, props.modEngineBlock, false)
+		SetVehicleMod(vehicle, 39, props.modEngineBlock, customTires)
 	end
 
 	if props.modAirFilter ~= nil then
-		SetVehicleMod(vehicle, 40, props.modAirFilter, false)
+		SetVehicleMod(vehicle, 40, props.modAirFilter, customTires)
 	end
 
 	if props.modStruts ~= nil then
-		SetVehicleMod(vehicle, 41, props.modStruts, false)
+		SetVehicleMod(vehicle, 41, props.modStruts, customTires)
 	end
 
 	if props.modArchCover ~= nil then
-		SetVehicleMod(vehicle, 42, props.modArchCover, false)
+		SetVehicleMod(vehicle, 42, props.modArchCover, customTires)
 	end
 
 	if props.modAerials ~= nil then
-		SetVehicleMod(vehicle, 43, props.modAerials, false)
+		SetVehicleMod(vehicle, 43, props.modAerials, customTires)
 	end
 
 	if props.modTrimB ~= nil then
-		SetVehicleMod(vehicle, 44, props.modTrimB, false)
+		SetVehicleMod(vehicle, 44, props.modTrimB, customTires)
 	end
 
 	if props.modTank ~= nil then
-		SetVehicleMod(vehicle, 45, props.modTank, false)
+		SetVehicleMod(vehicle, 45, props.modTank, customTires)
 	end
 
 	if props.modWindows ~= nil then
-		SetVehicleMod(vehicle, 46, props.modWindows, false)
+		SetVehicleMod(vehicle, 46, props.modWindows, customTires)
 	end
 
 	if props.modLivery ~= nil then
-		SetVehicleMod(vehicle, 48, props.modLivery, false)
+		SetVehicleMod(vehicle, 48, props.modLivery, customTires)
 		SetVehicleLivery(vehicle, props.modLivery)
 	end
 end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, size)
-	local onScreen, x, y = World3dToScreen2d(coords.x, coords.y, coords.z)
+	local onScreen, x, y = World3dToScreen2d(coords)
 	local camCoords = GetGameplayCamCoords()
 	local dist = #(camCoords - coords)
 	local size = size
