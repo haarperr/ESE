@@ -1,6 +1,6 @@
 ESX.Trace = function(str)
 	if Config.EnableDebug then
-		print('ESX> ' .. str)
+		print(string.format("ESE > %s", str))
 	end
 end
 
@@ -32,7 +32,7 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 	if ESX.ServerCallbacks[name] ~= nil then
 		ESX.ServerCallbacks[name](source, cb, ...)
 	else
-		print('es_extended: TriggerServerCallback => [' .. name .. '] does not exist')
+		ConsoleLog(string.format("Error registering server callback. The callback %q doesn't exist!", name), "error")
 	end
 end
 
@@ -88,7 +88,7 @@ ESX.SavePlayer = function(xPlayer, cb)
 	end)
 
 	Async.parallel(asyncTasks, function(results)
-		RconPrint('[SAVED] ' .. xPlayer.name .. "^7\n")
+		ConsoleLog(string.format("Saved player %s", xPlayer.name))
 
 		if cb ~= nil then
 			cb()
@@ -108,7 +108,7 @@ ESX.SavePlayers = function(cb)
 	end
 
 	Async.parallelLimit(asyncTasks, 8, function(results)
-		RconPrint('[SAVED] All players' .. "\n")
+		ConsoleLog("ESE: Saved all players", "success")
 
 		if cb ~= nil then
 			cb()

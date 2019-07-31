@@ -89,3 +89,19 @@ AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
 		TriggerClientEvent('esx:serverCallback', _source, requestId, ...)
 	end, ...)
 end)
+
+function ConsoleLog(log, type, isDebug, isRaw)
+	if isDebug and not Config.EnableDebug then return end
+
+	local messageColour = "^7"
+
+	if type == "success" then
+		messageColour = "^2"
+	elseif type == "error" then
+		messageColour = "^1"
+	elseif type == "warning" then
+		messageColour = "^3"
+	end
+
+	print(isRaw and log or string.format("^3ESE^7: %s%s^7", messageColour, log))
+end
