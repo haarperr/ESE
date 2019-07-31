@@ -1,65 +1,99 @@
 resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-name 'ESE (Essential Mode Enhanced)'
-description 'Drag and drop replacement for ESX'
-author 'ESE Team (https://github.com/ese-team)'
-version 'v1.0.0'
-url 'https://github.com/ese-team/ese/'
+description 'ES Extended'
 
-shared_scripts {
-	-- Global locale files
-	'locale.lua',
-	'locales/*.lua',
-
-	-- ESE and weapon config
-	'config.lua',
-	'config.weapons.lua',
-
-	-- Common scripts
-	'common/modules/*.lua',
-	'common/functions.lua',
-}
+version '1.1.0'
 
 server_scripts {
-	-- MySQL Async Lib
 	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
 
-	-- Server scripts
-	'server/*.lua',
+	'locale.lua',
+	'locales/de.lua',
+	'locales/br.lua',
+	'locales/fr.lua',
+	'locales/en.lua',
+	'locales/fi.lua',
+	'locales/sv.lua',
+	'locales/pl.lua',
+	'locales/cs.lua',
+
+	'config.lua',
+	'config.weapons.lua',
+
+	'server/common.lua',
+	'server/classes/player.lua',
+	'server/functions.lua',
+	'server/paycheck.lua',
+	'server/main.lua',
+	'server/commands.lua',
+
+	'common/modules/math.lua',
+	'common/modules/table.lua',
+	'common/functions.lua'
 }
 
 client_scripts {
-	-- Client scripts
-	'client/*.lua',
-	'client/modules/*.lua',
+	'locale.lua',
+	'locales/de.lua',
+	'locales/br.lua',
+	'locales/fr.lua',
+	'locales/en.lua',
+	'locales/fi.lua',
+	'locales/sv.lua',
+	'locales/pl.lua',
+	'locales/cs.lua',
+
+	'config.lua',
+	'config.weapons.lua',
+
+	'client/common.lua',
+	'client/entityiter.lua',
+	'client/functions.lua',
+	'client/wrapper.lua',
+	'client/main.lua',
+
+	'client/modules/death.lua',
+	'client/modules/scaleform.lua',
+	'client/modules/streaming.lua',
+
+	'common/modules/math.lua',
+	'common/modules/table.lua',
+	'common/functions.lua'
 }
 
--- ESE NUI page
-ui_page 'html/ui.html'
+ui_page {
+	'html/ui.html'
+}
 
 files {
-	-- ESE UI files
 	'locale.js',
-	'html/*.html',
-	'html/css/*.css',
+	'html/ui.html',
+
+	'html/css/app.css',
+
 	'html/js/mustache.min.js',
-	'html/js/*.js',
-	'html/fonts/*.ttf',
-	'html/img/accounts/*.png',
+	'html/js/wrapper.js',
+	'html/js/app.js',
+
+	'html/fonts/pdown.ttf',
+	'html/fonts/bankgothic.ttf',
+
+	'html/img/accounts/bank.png',
+	'html/img/accounts/black_money.png'
 }
 
 exports {
-	'getSharedObject',
+	'getSharedObject'
 }
 
 server_exports {
-	'getSharedObject',
+	'getSharedObject'
 }
 
 dependencies {
-	'mysql-async', 		-- MySQL Async (https://github.com/brouznouf/fivem-mysql-async)
-	'essentialmode',	-- Essential Mode (https://github.com/kanersps/essentialmode)
-	'esplugin_mysql',	-- Essential Mode MySQL custom data plugin (https://github.com/kanersps/esplugin_mysql)
-	'async',
+	'mysql-async',
+	'essentialmode',
+	'esplugin_mysql',
+	'async'
 }
