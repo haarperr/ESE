@@ -1,22 +1,17 @@
 resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-description 'ES Extended'
-
-version '1.1.0'
+name 'ESE (Essential Mode Enhanced)'
+description 'Drag and drop replacement for ESX'
+author 'ESE Team (https://github.com/ese-team)'
+version 'v1.0.0'
+url 'https://github.com/ese-team/ese/'
 
 server_scripts {
 	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
 
 	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
+	'locales/*.lua',
 
 	'config.lua',
 	'config.weapons.lua',
@@ -35,14 +30,7 @@ server_scripts {
 
 client_scripts {
 	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
+	'locales/*.lua',
 
 	'config.lua',
 	'config.weapons.lua',
@@ -69,18 +57,10 @@ ui_page {
 files {
 	'locale.js',
 	'html/ui.html',
-
 	'html/css/app.css',
-
-	'html/js/mustache.min.js',
-	'html/js/wrapper.js',
-	'html/js/app.js',
-
-	'html/fonts/pdown.ttf',
-	'html/fonts/bankgothic.ttf',
-
-	'html/img/accounts/bank.png',
-	'html/img/accounts/black_money.png'
+	'html/js/*.js',
+	'html/fonts/*.ttf',
+	'html/img/accounts/*.png',
 }
 
 exports {
@@ -95,5 +75,5 @@ dependencies {
 	'mysql-async',
 	'essentialmode',
 	'esplugin_mysql',
-	'async'
+	'async',
 }
