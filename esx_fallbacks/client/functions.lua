@@ -1,4 +1,4 @@
-ESX = {}
+--ESX = {} Prevent ESE's `ESX` object from being overwritten
 ESX.PlayerData = {}
 ESX.PlayerLoaded = false
 ESX.CurrentRequestId = 0

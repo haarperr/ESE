@@ -1,4 +1,4 @@
-ESX = {}
+--ESX = {} -- Prevent ESE's `ESX` object from being overwritten
 ESX.Players = {}
 ESX.UsableItemsCallbacks = {}
 ESX.Items = {}
@@ -10,6 +10,7 @@ ESX.Pickups = {}
 ESX.PickupId = 0
 ESX.Jobs = {}
 
+-- Handled by ESE
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)
 end)

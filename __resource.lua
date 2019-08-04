@@ -6,6 +6,15 @@ author 'ESE Team (https://github.com/ese-team)'
 version 'v1.0.0'
 url 'https://github.com/ese-team/ese/'
 
+-- Developer Notes:
+--[[
+	The loading order is very important
+	
+	Before any ESE or ESX functions, the `esx_compatibility.lua` file needs to be loaded.
+	Then, ESX needs to be loaded in it's exact order from esx_fallbacks.
+	Finally, ESE code can be loaded.
+]]
+
 server_scripts {
 	'@async/async.lua',
 	'@mysql-async/lib/MySQL.lua',
@@ -15,17 +24,19 @@ server_scripts {
 
 	'config.lua',
 	'config.weapons.lua',
+	
+	'common/esx_compatibility.lua',
 
-	'server/common.lua',
-	'server/classes/player.lua',
-	'server/functions.lua',
-	'server/paycheck.lua',
-	'server/main.lua',
-	'server/commands.lua',
+	'esx_fallbacks/server/common.lua',
+	'esx_fallbacks/server/classes/player.lua',
+	'esx_fallbacks/server/functions.lua',
+	'esx_fallbacks/server/paycheck.lua',
+	'esx_fallbacks/server/main.lua',
+	'esx_fallbacks/server/commands.lua',
 
-	'common/modules/math.lua',
-	'common/modules/table.lua',
-	'common/functions.lua'
+	'esx_fallbacks/common/modules/math.lua',
+	'esx_fallbacks/common/modules/table.lua',
+	'esx_fallbacks/common/functions.lua'
 }
 
 client_scripts {
@@ -35,19 +46,21 @@ client_scripts {
 	'config.lua',
 	'config.weapons.lua',
 
-	'client/common.lua',
-	'client/entityiter.lua',
-	'client/functions.lua',
-	'client/wrapper.lua',
-	'client/main.lua',
+	'common/esx_compatibility.lua',
 
-	'client/modules/death.lua',
-	'client/modules/scaleform.lua',
-	'client/modules/streaming.lua',
+	'esx_fallbacks/client/common.lua',
+	'esx_fallbacks/client/entityiter.lua',
+	'esx_fallbacks/client/functions.lua',
+	'esx_fallbacks/client/wrapper.lua',
+	'esx_fallbacks/client/main.lua',
 
-	'common/modules/math.lua',
-	'common/modules/table.lua',
-	'common/functions.lua'
+	'esx_fallbacks/client/modules/death.lua',
+	'esx_fallbacks/client/modules/scaleform.lua',
+	'esx_fallbacks/client/modules/streaming.lua',
+
+	'esx_fallbacks/common/modules/math.lua',
+	'esx_fallbacks/common/modules/table.lua',
+	'esx_fallbacks/common/functions.lua',
 }
 
 ui_page {
@@ -57,11 +70,20 @@ ui_page {
 files {
 	'locale.js',
 	'html/ui.html',
+
 	'html/css/app.css',
-	'html/js/*.js',
-	'html/fonts/*.ttf',
-	'html/img/accounts/*.png',
+
+	'html/js/mustache.min.js',
+	'html/js/wrapper.js',
+	'html/js/app.js',
+
+	'html/fonts/pdown.ttf',
+	'html/fonts/bankgothic.ttf',
+
+	'html/img/accounts/bank.png',
+	'html/img/accounts/black_money.png'
 }
+
 
 exports {
 	'getSharedObject'
